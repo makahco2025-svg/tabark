@@ -34,7 +34,7 @@
             background-color: var(--light-bg);
             color: var(--dark-text);
             overflow-x: hidden; /* منع التمرير الأفقي */
-            padding-top: 80px; /* إضافة مساحة علوية لتجنب تداخل المحتوى مع الشريط الثابت */
+            /* تمت إزالة padding-top لأن الهيدر لم يعد ثابتًا من البداية */
         }
 
         /* Header & Navbar */
@@ -42,21 +42,33 @@
             background-color: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             padding: 1rem 0;
-            /* إضافة تثبيت في الأعلى */
+            /* === التعديل الجديد === */
+            /* تمت إزالة التثبيت والانتقال سيتم عبر كلاس جديد */
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* === التعديل الجديد === */
+        /* كلاس جديد يتم إضافته عند التمرير */
+        .navbar-sticky {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            /* إضافة تأثير انتقالي للظل عند التمرير */
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* كلاس يضاف عبر الجافاسكريبت عند التمرير لأسفل */
-        .navbar-scrolled {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
+            animation: slideDown 0.3s ease forwards;
+        }
+
+        /* === التعديل الجديد: حركة الهبوط === */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
 
         .navbar-brand {
@@ -109,7 +121,7 @@
 
         .search-bar {
             border-radius: 20px;
-            padding-right: 150px;
+            padding-right: 20px;
             border: 1px solid #ddd;
             max-width: 250px; /* تحديد أقصى عرض لشريط البحث */
             transition: all 0.3s ease;
@@ -123,7 +135,7 @@
         .hero-section {
             background: url('images/header-bg.jpg') center/cover no-repeat;
             padding: 40px 0; /* تقليل الحشو */
-            margin-bottom: 80px;
+            margin-bottom: 30px;
             min-height: 320px; /* تقليل الارتفاع */
             /* تم إلغاء خصائص flexbox لأن القسم فارغ */
         }
@@ -553,9 +565,7 @@
         }
 
         @media (max-width: 576px) {
-            body {
-                padding-top: 120px; /* زيادة المساحة العلوية للشاشات الصغيرة */
-            }
+            /* تمت إزالة padding-top من هنا */
             
             .hero-section {
                 padding: 20px 0; /* تقليل الحشو أكثر للشاشات الصغيرة جداً */
@@ -607,7 +617,7 @@
 
     <!-- Header & Navbar -->
     <header>
-        <!-- شريط التنقل الثابت -->
+        <!-- شريط التنقل (غير ثابت في البداية) -->
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
                 <!-- شعار الموقع -->
@@ -790,26 +800,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // كود تثبيت الشريط العلوي مع تأثير
+            // === التعديل الجديد: كود تثبيت الشريط العلوي عند التمرير ===
             const navbar = document.querySelector('.navbar');
-            const searchInput = document.getElementById('searchInput');
-            const navbarControls = document.querySelector('.navbar-controls');
-            const navbarCategories = document.querySelector('.navbar-categories');
+            const heroSection = document.querySelector('.hero-section');
+            
+            // حساب ارتفاع قسم الهيدر لتحديد نقطة التثبيت
+            const heroHeight = heroSection.offsetHeight + navbar.offsetHeight;
 
-            // تفعيل التأثير عند التمرير
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) { // عند التمرير لمسافة أكثر من 50 بكسل
-                    navbar.classList.add('navbar-scrolled');
-                    // تقليل حجم الشعار عند التمرير
-                    document.querySelector('.navbar-brand img').style.height = '30px';
-                    document.querySelector('.navbar-brand').style.fontSize = '1.2rem';
+                if (window.scrollY > heroHeight) {
+                    // إضافة كلاس التثبيت عند تجاوز قسم الهيدر
+                    navbar.classList.add('navbar-sticky');
                 } else {
-                    navbar.classList.remove('navbar-scrolled');
-                    // إعادة حجم الشعار الأصلي
-                    document.querySelector('.navbar-brand img').style.height = '40px';
-                    document.querySelector('.navbar-brand').style.fontSize = '1.5rem';
+                    // إزالة كلاس التثبيت عند العودة للأعلى
+                    navbar.classList.remove('navbar-sticky');
                 }
             });
+            // === نهاية التعديل الجديد ===
             
             // ربط العنوان بجوجل ماب
             const storeAddress = document.getElementById('storeAddress');
@@ -887,6 +894,7 @@
             const offersContainer = document.getElementById('offersContainer');
             const vegetablesContainer = document.getElementById('vegetablesContainer');
             const fruitsContainer = document.getElementById('fruitsContainer');
+            const searchInput = document.getElementById('searchInput');
             const cartCount = document.getElementById('cartCount');
             const cartItemsContainer = document.getElementById('cartItemsContainer');
             const cartTotal = document.getElementById('cartTotal');
@@ -1135,7 +1143,7 @@
                     phone: document.getElementById('customerPhone').value,
                     address: document.getElementById('customerAddress').value,
                     building: document.getElementById('buildingNumber').value,
-                    apartment: document.getElementById('apartmentNumber').value,
+                    apartment: document.getElementById('customerApartment').value,
                     landmark: document.getElementById('landmark').value
                 };
 
@@ -1195,6 +1203,3 @@
     </script>
 </body>
 </html>
-
-
-

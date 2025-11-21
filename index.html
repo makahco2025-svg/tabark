@@ -34,6 +34,7 @@
             background-color: var(--light-bg);
             color: var(--dark-text);
             overflow-x: hidden; /* منع التمرير الأفقي */
+            padding-top: 80px; /* إضافة مساحة علوية لتجنب تداخل المحتوى مع الشريط الثابت */
         }
 
         /* Header & Navbar */
@@ -41,15 +42,21 @@
             background-color: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             padding: 1rem 0;
-            /* === التعديل الجديد === */
+            /* إضافة تثبيت في الأعلى */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
             /* إضافة تأثير انتقالي للظل عند التمرير */
-            transition: box-shadow 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
         }
 
-        /* === التعديل الجديد === */
         /* كلاس يضاف عبر الجافاسكريبت عند التمرير لأسفل */
         .navbar-scrolled {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
         }
 
         .navbar-brand {
@@ -64,7 +71,6 @@
             height: 40px;
         }
         
-        /* === التعديلات الجديدة === */
         /* حاوية جديدة للأقسام والبحث */
         .navbar-controls {
             display: flex;
@@ -85,9 +91,20 @@
             color: var(--dark-text) !important;
             transition: color 0.3s;
             padding: 0.5rem 1rem !important; /* زيادة مسافة النقر */
+            position: relative;
         }
         .nav-link:hover, .nav-link.active {
             color: var(--primary-color) !important;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            left: 0;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
         }
 
         .search-bar {
@@ -95,10 +112,13 @@
             padding-right: 20px;
             border: 1px solid #ddd;
             max-width: 250px; /* تحديد أقصى عرض لشريط البحث */
+            transition: all 0.3s ease;
         }
-        /* === نهاية التعديلات الجديدة === */
+        .search-bar:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
         
-        /* === التعديل الجديد على Hero Section === */
         /* Hero Section */
         .hero-section {
             background: url('images/header-bg.jpg') center/cover no-repeat;
@@ -107,9 +127,8 @@
             min-height: 320px; /* تقليل الارتفاع */
             /* تم إلغاء خصائص flexbox لأن القسم فارغ */
         }
-        /* === نهاية التعديل الجديد === */
 
-        /* === التعديل الجديد: زر جروب الواتساب === */
+        /* زر جروب الواتساب */
         .whatsapp-group-link {
             display: inline-block;
             background-color: #25D366; /* لون الواتساب الرسمي */
@@ -132,7 +151,6 @@
         .whatsapp-group-link i {
             margin-left: 8px;
         }
-        /* === نهاية التعديل الجديد === */
 
         /* Section Headers */
         .section-header {
@@ -470,7 +488,10 @@
         }
 
         @media (max-width: 768px) {
-            /* === تعديلات الاستجابة للشريط العلوي === */
+            /* تعديلات الاستجابة للشريط العلوي */
+            .navbar {
+                padding: 0.5rem 0;
+            }
             .navbar-controls {
                 flex-direction: column;
                 align-items: stretch;
@@ -481,11 +502,16 @@
                 margin-left: 0;
                 justify-content: center;
                 margin-bottom: 1rem;
+                flex-wrap: wrap;
+            }
+            .nav-link {
+                padding: 0.3rem 0.8rem !important;
+                font-size: 0.9rem;
             }
             .search-bar {
                 max-width: 100%;
+                margin-bottom: 0.5rem;
             }
-            /* === نهاية تعديلات الاستجابة === */
 
             .navbar-brand {
                 font-size: 1.2rem;
@@ -527,6 +553,10 @@
         }
 
         @media (max-width: 576px) {
+            body {
+                padding-top: 120px; /* زيادة المساحة العلوية للشاشات الصغيرة */
+            }
+            
             .hero-section {
                 padding: 20px 0; /* تقليل الحشو أكثر للشاشات الصغيرة جداً */
                 min-height: 120px; /* تقليل الارتفاع أكثر للشاشات الصغيرة جداً */
@@ -577,13 +607,13 @@
 
     <!-- Header & Navbar -->
     <header>
-        <!-- تم إضافة class sticky-top بالفعل وسيتم تعزيزه بالجافاسكريبت -->
-        <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <!-- شريط التنقل الثابت -->
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <!-- تم تفعيل شعار الصورة -->
+                <!-- شعار الموقع -->
                 <a class="navbar-brand" href="#"><img src="images/logo.png" alt="خضروات وفاكهة أسواق تبارك"> خضروات وفاكهة أسواق تبارك</a>
 
-                <!-- === تم إلغاء القائمة المنسدلة واستبدالها بالعناصر مباشرة === -->
+                <!-- حاوية الأقسام والبحث -->
                 <div class="navbar-controls">
                     <div class="navbar-categories">
                         <a class="nav-link category-link active" href="#" data-category="all">الكل</a>
@@ -598,18 +628,18 @@
     </header>
 
     <main>
-        <!-- === تم التعديل هنا: إلغاء النصوص وإبقاء القسم كشعار صورة === -->
+        <!-- قسم الصورة الرئيسية -->
         <section class="hero-section">
             <!-- تم حذف النصوص التي كانت فوق الصورة -->
         </section>
 
-        <!-- Offers Section -->
+        <!-- قسم العروض -->
         <section id="offers" class="container my-5 products-section" data-section-category="offers">
             <div class="section-header">
                 <h2>عروض حصرية</h2>
             </div>
             
-            <!-- === التعديل الجديد: إضافة زر جروب الواتساب === -->
+            <!-- زر جروب الواتساب -->
             <div class="text-center">
                 <!-- !!! هام: قم بتغيير هذا الرابط إلى رابط جروب الواتساب الخاص بك !!! -->
                 <a href="https://chat.whatsapp.com/YOUR_INVITE_LINK_HERE" target="_blank" class="whatsapp-group-link">
@@ -617,35 +647,34 @@
                     انضم إلى جروب الواتساب لمشاهدة المزيد من العروض الحصرية
                 </a>
             </div>
-            <!-- === نهاية التعديل الجديد === -->
 
             <div class="row" id="offersContainer">
-                <!-- Products will be injected here by JS -->
+                <!-- سيتم إضافة المنتجات هنا عبر JavaScript -->
             </div>
         </section>
 
-        <!-- Vegetables Section -->
+        <!-- قسم الخضروات -->
         <section id="vegetables" class="container my-5 products-section" data-section-category="vegetables">
             <div class="section-header">
                 <h2>الخضروات</h2>
             </div>
             <div class="row" id="vegetablesContainer">
-                <!-- Products will be injected here by JS -->
+                <!-- سيتم إضافة المنتجات هنا عبر JavaScript -->
             </div>
         </section>
 
-        <!-- Fruits Section -->
+        <!-- قسم الفواكه -->
         <section id="fruits" class="container my-5 products-section" data-section-category="fruits">
             <div class="section-header">
                 <h2>الفواكه</h2>
             </div>
             <div class="row" id="fruitsContainer">
-                <!-- Products will be injected here by JS -->
+                <!-- سيتم إضافة المنتجات هنا عبر JavaScript -->
             </div>
         </section>
     </main>
 
-    <!-- Cart Modal -->
+    <!-- نافذة سلة التسوق -->
     <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -654,7 +683,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="cartItemsContainer">
-                    <!-- Cart items will be injected here -->
+                    <!-- سيتم إضافة عناصر السلة هنا -->
                 </div>
                 <div class="modal-footer">
                     <div class="cart-total w-100">الإجمالي: <span id="cartTotal">0</span> ج.م</div>
@@ -665,7 +694,7 @@
         </div>
     </div>
 
-    <!-- Checkout Modal -->
+    <!-- نافذة إتمام الطلب -->
     <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -708,13 +737,13 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- تذييل الموقع -->
     <footer>
         <div class="container">
             <p>&copy; 2024 خضروات وفاكهة أسواق تبارك. جميع الحقوق محفوظة.</p>
             <p>صُمم بـ <i class="fas fa-heart text-danger"></i> لتقديم أفضل المنتجات</p>
             
-            <!-- Contact Info Section -->
+            <!-- معلومات الاتصال -->
             <div class="contact-info mt-4">
                 <h5>تواصل معنا</h5>
                 <p class="mb-1">
@@ -731,7 +760,7 @@
                 </p>
             </div>
             
-            <!-- Store Location Section -->
+            <!-- قسم موقع المتجر -->
             <div class="store-location">
                 <h5><i class="fas fa-map-marker-alt ms-2"></i>موقع المتجر</h5>
                 <p class="store-address" id="storeAddress">
@@ -744,13 +773,13 @@
         </div>
     </footer>
 
-    <!-- Floating Cart Button -->
+    <!-- زر سلة التسوق العائم -->
     <div class="floating-cart-btn" data-bs-toggle="modal" data-bs-target="#cartModal">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-count" id="cartCount">0</span>
     </div>
 
-    <!-- Scroll to Top Button -->
+    <!-- زر العودة للأعلى -->
     <button id="scrollToTopBtn" title="العودة للأعلى">
         <i class="fas fa-arrow-up"></i>
     </button>
@@ -761,36 +790,44 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // === التعديل الجديد: كود تثبيت الشريط العلوي مع تأثير ===
+            // كود تثبيت الشريط العلوي مع تأثير
             const navbar = document.querySelector('.navbar');
+            const searchInput = document.getElementById('searchInput');
+            const navbarControls = document.querySelector('.navbar-controls');
+            const navbarCategories = document.querySelector('.navbar-categories');
 
+            // تفعيل التأثير عند التمرير
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) { // عند التمرير لمسافة أكثر من 50 بكسل
                     navbar.classList.add('navbar-scrolled');
+                    // تقليل حجم الشعار عند التمرير
+                    document.querySelector('.navbar-brand img').style.height = '30px';
+                    document.querySelector('.navbar-brand').style.fontSize = '1.2rem';
                 } else {
                     navbar.classList.remove('navbar-scrolled');
+                    // إعادة حجم الشعار الأصلي
+                    document.querySelector('.navbar-brand img').style.height = '40px';
+                    document.querySelector('.navbar-brand').style.fontSize = '1.5rem';
                 }
             });
-            // === نهاية التعديل الجديد ===
             
-            // === التعديل الجديد: ربط العنوان بجوجل ماب ===
+            // ربط العنوان بجوجل ماب
             const storeAddress = document.getElementById('storeAddress');
             
             storeAddress.addEventListener('click', () => {
                 // افتح جوجل ماب في نافذة جديدة
                 window.open('https://www.google.com/maps/search/?api=1&query=منطقة+390+فدان+حدائق+أكتوبر+السنتر+الجديد+بجوار+مدرسة+حمزة+بن+عبدالمطلب+الابتدائية', '_blank');
             });
-            // === نهاية التعديل الجديد ===
             
-            // Product Data (تم تعديل روابط الصور هنا)
+            // بيانات المنتجات
             const products = [
-                // Offers
+                // العروض
                 { id: 1, name: 'طماطم', price: 5, category: 'vegetables', image: 'images/طماطم.jpg', isOffer: true },
                 { id: 2, name: 'موز', price: 35, category: 'fruits', image: 'images/موز.jpg', isOffer: true },
                 { id: 3, name: 'فلفل الوان', price: 40, category: 'fruits', image: 'images/فلفل الوان.jpg', isOffer: true },
                 { id: 4, name: 'تفاح احمر', price: 65, category: 'fruits', image: 'images/تفاح احمر.jpg', isOffer: true },
 
-                // Vegetables
+                // الخضروات
                 { id: 10, name: 'طماطم', price: 5, category: 'vegetables', image: 'images/طماطم.jpg' },
                 { id: 11, name: 'خيار', price: 18, category: 'vegetables', image: 'images/خيار.jpg' },
                 { id: 12, name: 'بطاطس', price: 10, category: 'vegetables', image: 'images/بطاطس.jpg' },
@@ -823,7 +860,7 @@
                 { id: 39, name: 'بطاطا', price: 15, category: 'vegetables', image: 'images/بطاطا.jpg' },
                 { id: 40, name: 'ثوم صينى', price: 35, category: 'vegetables', image: 'images/ثوم صينى.jpg' },
 
-                // Fruits
+                // الفواكه
                 { id: 60, name: 'جوافة', price: 30, category: 'fruits', image: 'images/جوافة.jpg' },
                 { id: 61, name: 'رمان', price: 22, category: 'fruits', image: 'images/رمان.jpg' },
                 { id: 62, name: 'برتقال', price: 45, category: 'fruits', image: 'images/برتقال.jpg' },
@@ -841,19 +878,15 @@
                 { id: 74, name: 'افوكادو', price: 220, category: 'fruits', image: 'images/افوكادو.jpg' },
                 { id: 75, name: 'كيوى', price: 180, category: 'fruits', image: 'images/كيوى.jpg' },
                 { id: 76, name: 'قشطة', price: 80, category: 'fruits', image: 'images/قشطة.jpg' },
-
-
-            
             ];
 
             let cart = [];
-            let currentFilter = 'all'; // State to keep track of the active filter
+            let currentFilter = 'all'; // حالة لتتبع الفلتر النشط
 
-            // --- DOM Elements ---
+            // عناصر DOM
             const offersContainer = document.getElementById('offersContainer');
             const vegetablesContainer = document.getElementById('vegetablesContainer');
             const fruitsContainer = document.getElementById('fruitsContainer');
-            const searchInput = document.getElementById('searchInput');
             const cartCount = document.getElementById('cartCount');
             const cartItemsContainer = document.getElementById('cartItemsContainer');
             const cartTotal = document.getElementById('cartTotal');
@@ -865,9 +898,9 @@
             const categoryLinks = document.querySelectorAll('.category-link');
             const productSections = document.querySelectorAll('.products-section');
 
-            // --- Functions ---
+            // دوال
 
-            // Render products on the page
+            // عرض المنتجات على الصفحة
             function renderProducts() {
                 offersContainer.innerHTML = '';
                 vegetablesContainer.innerHTML = '';
@@ -875,7 +908,7 @@
 
                 products.forEach(product => {
                     const productCard = `
-                        <div class="col-lg-3 col-md-4 col-sm-6 product-item" data-name="${product.name.toLowerCase()}" data-category="${product.category}">
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6 product-item" data-name="${product.name.toLowerCase()}" data-category="${product.category}">
                             <div class="card product-card">
                                 ${product.isOffer ? '<span class="offer-badge">عرض</span>' : ''}
                                 <div class="card-img-wrapper">
@@ -900,26 +933,26 @@
                 });
             }
 
-            // Animate items in a specific section
+            // تحريك العناصر في قسم معين
             function animateSection(section) {
                 const items = section.querySelectorAll('.product-item');
                 items.forEach((item, index) => {
-                    // Reset animation
+                    // إعادة تعيين الحركة
                     item.classList.remove('animate-in');
-                    // Trigger reflow
+                    // إعادة تشغيل التدفق
                     void item.offsetWidth;
-                    // Add animation with a delay
+                    // إضافة الحركة مع تأخير
                     item.style.transitionDelay = `${index * 100}ms`;
                     item.classList.add('animate-in');
                 });
             }
 
-            // Filter products by category
+            // فلترة المنتجات حسب الفئة
             function filterByCategory(category) {
                 currentFilter = category;
-                searchInput.value = ''; // Clear search on category change
+                searchInput.value = ''; // مسح البحث عند تغيير الفئة
 
-                // Update active nav link
+                // تحديث الرابط النشط
                 categoryLinks.forEach(link => link.classList.remove('active'));
                 document.querySelector(`[data-category="${category}"]`).classList.add('active');
 
@@ -931,14 +964,14 @@
                     }
                 });
                 
-                // Trigger animation for the visible section
+                // تفعيل الحركة للقسم المرئي
                 const visibleSection = document.querySelector('.products-section:not(.d-none)');
                 if (visibleSection) {
                     animateSection(visibleSection);
                 }
             }
 
-            // Handle search functionality
+            // التعامل مع وظيفة البحث
             function handleSearch() {
                 const searchTerm = searchInput.value.toLowerCase();
                 const allProductItems = document.querySelectorAll('.product-item');
@@ -948,7 +981,7 @@
                     const productCategory = item.dataset.category;
                     const parentSection = item.closest('.products-section');
 
-                    // Check if the item matches the search term and is in a visible section
+                    // التحقق مما إذا كان العنصر يطابق مصطلح البحث وهو في قسم مرئي
                     const matchesSearch = productName.includes(searchTerm);
                     const isInVisibleSection = !parentSection.classList.contains('d-none');
 
@@ -960,7 +993,7 @@
                 });
             }
 
-            // Add item to cart
+            // إضافة عنصر إلى السلة
             function addToCart(productId) {
                 const product = products.find(p => p.id === productId);
                 const existingItem = cart.find(item => item.id === productId);
@@ -975,7 +1008,7 @@
                 showToast(`تم إضافة ${product.name} إلى السلة`);
             }
 
-            // Update Cart UI
+            // تحديث واجهة المستخدم للسلة
             function updateCartUI() {
                 cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
                 
@@ -1011,7 +1044,7 @@
                 cartTotal.textContent = total;
             }
             
-            // Change item quantity
+            // تغيير كمية العنصر
             function changeQuantity(productId, delta) {
                 const item = cart.find(item => item.id === productId);
                 if (item) {
@@ -1024,13 +1057,13 @@
                 }
             }
 
-            // Remove item from cart
+            // إزالة عنصر من السلة
             function removeFromCart(productId) {
                 cart = cart.filter(item => item.id !== productId);
                 updateCartUI();
             }
             
-            // Show toast notification
+            // عرض إشعار
             function showToast(message) {
                 const toastHTML = `
                     <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 20px; left: 20px; z-index: 9999;">
@@ -1049,9 +1082,9 @@
                 toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
             }
 
-            // --- Event Listeners ---
+            // مستمعي الأحداث
             
-            // Category links click
+            // النقر على روابط الفئات
             categoryLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1059,10 +1092,10 @@
                 });
             });
 
-            // Search functionality
+            // وظيفة البحث
             searchInput.addEventListener('input', handleSearch);
 
-            // Add to cart button click (using event delegation)
+            // النقر على زر إضافة للسلة (باستخدام تفويض الحدث)
             document.body.addEventListener('click', (e) => {
                 if (e.target.classList.contains('add-to-cart-btn')) {
                     const productId = parseInt(e.target.dataset.id);
@@ -1070,7 +1103,7 @@
                 }
             });
 
-            // Cart items controls click (using event delegation)
+            // النقر على عناصر التحكم في السلة (باستخدام تفويض الحدث)
             cartItemsContainer.addEventListener('click', (e) => {
                 const target = e.target;
                 const id = parseInt(target.closest('[data-id]').dataset.id);
@@ -1083,7 +1116,7 @@
                 }
             });
 
-            // Checkout button click
+            // النقر على زر إتمام الطلب
             checkoutBtn.addEventListener('click', () => {
                 if (cart.length === 0) {
                     alert('سلة التسوق فارغة! أضف بعض المنتجات أولاً.');
@@ -1093,7 +1126,7 @@
                 checkoutModal.show();
             });
 
-            // Checkout form submission
+            // إرسال نموذج إتمام الطلب
             checkoutForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
@@ -1130,7 +1163,7 @@
                 const whatsappURL = `https://wa.me/201030566078?text=${encodeURIComponent(orderDetails)}`;
                 window.open(whatsappURL, '_blank');
                 
-                // Clear cart and close modals after sending
+                // مسح السلة وإغلاق النوافذ بعد الإرسال
                 cart = [];
                 updateCartUI();
                 checkoutModal.hide();
@@ -1138,7 +1171,7 @@
                 showToast('تم إرسال طلبك بنجاح! شكراً لك.');
             });
 
-            // --- Scroll to Top Button Logic ---
+            // منطق زر العودة للأعلى
             window.onscroll = function() {
                 if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
                     scrollToTopBtn.classList.add("show");
@@ -1154,13 +1187,11 @@
                 });
             });
 
-
-            // --- Initial Render ---
+            // التهيئة الأولية
             renderProducts();
-            filterByCategory('all'); // Show all products on load
+            filterByCategory('all'); // عرض جميع المنتجات عند التحميل
             updateCartUI();
         });
     </script>
 </body>
 </html>
-
